@@ -19,7 +19,27 @@ const { startGeminiProxyServer } = require('./src/server/gemini-proxy-server');
 // Docker mode flag
 process.env.CT_DOCKER = 'true';
 
+// Ensure required directories exist
+function ensureDirectories() {
+  const os = require('os');
+  const dirs = [
+    path.join(os.homedir(), '.claude', 'cc-tool'),
+    path.join(os.homedir(), '.claude', 'logs'),
+    path.join(os.homedir(), '.claude', 'projects'),
+    path.join(os.homedir(), '.codex'),
+    path.join(os.homedir(), '.gemini')
+  ];
+
+  dirs.forEach(dir => {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+      console.log(chalk.gray(`Created directory: ${dir}`));
+    }
+  });
+}
+
 async function startDockerServer() {
+  ensureDirectories();
   const config = loadConfig();
   const port = parseInt(process.env.CT_WEB_PORT) || config.ports?.webUI || 10099;
 

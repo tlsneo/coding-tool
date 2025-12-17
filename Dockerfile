@@ -34,10 +34,12 @@ COPY . .
 # Build web frontend (vite outputs to ../../dist/web relative to src/web)
 RUN cd src/web && npm run build
 
-# Create data directory
+# Create data directories (Claude, Codex, Gemini)
 RUN mkdir -p /data/.claude/cc-tool && \
     mkdir -p /data/.claude/logs && \
-    mkdir -p /data/.claude/projects
+    mkdir -p /data/.claude/projects && \
+    mkdir -p /data/.codex && \
+    mkdir -p /data/.gemini
 
 # Environment variables
 ENV NODE_ENV=production

@@ -19,11 +19,10 @@ services:
       # Gemini Proxy
       - "10090:10090"
     volumes:
-      # 方式1: 管理本机 Claude Code 会话（读取 ~/.claude 数据）
-      # - ~/.claude:/data/.claude
-
-      # 方式2: 独立运行，数据存在当前目录的 data 文件夹
-      - ./data:/data/.claude
+      # 数据持久化（存在当前目录的 data 文件夹）
+      - ./data/claude:/data/.claude
+      - ./data/codex:/data/.codex
+      - ./data/gemini:/data/.gemini
     environment:
       - NODE_ENV=production
       - HOME=/data
@@ -42,9 +41,9 @@ services:
       - "com.centurylinklabs.watchtower.enable=true"
 
   # Watchtower - 自动更新容器
-  watchtower:
+  coding-tool-watchtower:
     image: containrrr/watchtower
-    container_name: watchtower
+    container_name: coding-tool-watchtower
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -55,7 +54,4 @@ services:
       - WATCHTOWER_LABEL_ENABLE=true
       # 更新后清理旧镜像
       - WATCHTOWER_CLEANUP=true
-      # 发送通知（可选，需要配置）
-      # - WATCHTOWER_NOTIFICATIONS=slack
-      # - WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL=https://hooks.slack.com/...
     command: --interval 21600
