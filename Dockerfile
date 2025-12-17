@@ -19,16 +19,14 @@ WORKDIR /app
 
 # Copy package files first for better caching
 COPY package*.json ./
-COPY pnpm-lock.yaml ./
 
-# Install pnpm and dependencies
-RUN npm install -g pnpm pm2 && \
-    pnpm install --frozen-lockfile
+# Install dependencies using npm (more compatible than pnpm in Docker)
+RUN npm install -g pm2 && \
+    npm install
 
 # Copy web package files and install
 COPY src/web/package*.json ./src/web/
-COPY src/web/pnpm-lock.yaml ./src/web/
-RUN cd src/web && pnpm install --frozen-lockfile
+RUN cd src/web && npm install
 
 # Copy source code
 COPY . .
