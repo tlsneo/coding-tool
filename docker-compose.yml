@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  coding-tool:
+    # 使用 GitHub Container Registry 镜像（需要先 Fork 并设置 GitHub Actions）
+    # image: ghcr.io/YOUR_GITHUB_USERNAME/coding-tool:latest
+    # 或者本地构建
+    build: .
+    image: coding-tool:latest
+    container_name: coding-tool
+    restart: unless-stopped
+    ports:
+      # Web UI
+      - "10099:10099"
+      # Claude Proxy
+      - "10088:10088"
+      # Codex Proxy
+      - "10089:10089"
+      # Gemini Proxy
+      - "10090:10090"
+    volumes:
+      # Mount Claude data directory for persistence
+      - ~/.claude:/data/.claude
+    environment:
+      - NODE_ENV=production
+      - HOME=/data
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:10099/api/version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  # Watchtower - 自动更新容器
+  watchtower:
+    image: containrrr/watchtower
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      # 每6小时检查一次更新
+      - WATCHTOWER_POLL_INTERVAL=21600
+      # 只更新有标签的容器
+      - WATCHTOWER_LABEL_ENABLE=true
+      # 更新后清理旧镜像
+      - WATCHTOWER_CLEANUP=true
+      # 发送通知（可选，需要配置）
+      # - WATCHTOWER_NOTIFICATIONS=slack
+      # - WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL=https://hooks.slack.com/...
+    command: --interval 21600
