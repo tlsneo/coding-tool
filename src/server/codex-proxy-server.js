@@ -450,8 +450,8 @@ async function startCodexProxyServer(options = {}) {
     proxyServer = http.createServer(proxyApp);
 
     return new Promise((resolve, reject) => {
-      proxyServer.listen(port, '127.0.0.1', () => {
-        console.log(`Codex proxy server started on http://127.0.0.1:${port}`);
+      proxyServer.listen(port, '0.0.0.0', () => {
+        console.log(`Codex proxy server started on http://0.0.0.0:${port}`);
 
         // 保存代理启动时间（如果是切换渠道，保留原有启动时间）
         saveProxyStartTime('codex', preserveStartTime);
