@@ -31,10 +31,8 @@ RUN cd src/web && npm install
 # Copy source code
 COPY . .
 
-# Build web frontend
-RUN cd src/web && npm run build && \
-    mkdir -p /app/dist/web && \
-    cp -r dist/* /app/dist/web/
+# Build web frontend (vite outputs to ../../dist/web relative to src/web)
+RUN cd src/web && npm run build
 
 # Create data directory
 RUN mkdir -p /data/.claude/cc-tool && \
