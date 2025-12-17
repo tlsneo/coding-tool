@@ -396,8 +396,8 @@ async function startProxyServer(options = {}) {
     proxyServer = http.createServer(proxyApp);
 
     return new Promise((resolve, reject) => {
-      proxyServer.listen(port, '0.0.0.0', () => {
-        console.log(`✅ Proxy server started on http://0.0.0.0:${port}`);
+      proxyServer.listen(port, '127.0.0.1', () => {
+        console.log(`✅ Proxy server started on http://127.0.0.1:${port}`);
         saveProxyStartTime('claude', preserveStartTime);
         resolve({ success: true, port });
       });

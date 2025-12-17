@@ -31,6 +31,12 @@ RUN cd src/web && npm install
 # Copy source code
 COPY . .
 
+# Patch: Change proxy listen address from 127.0.0.1 to 0.0.0.0 for Docker networking
+RUN sed -i "s/listen(port, '127.0.0.1'/listen(port, '0.0.0.0'/g" src/server/proxy-server.js && \
+    sed -i "s/listen(port, '127.0.0.1'/listen(port, '0.0.0.0'/g" src/server/codex-proxy-server.js && \
+    sed -i "s/listen(port, '127.0.0.1'/listen(port, '0.0.0.0'/g" src/server/gemini-proxy-server.js && \
+    echo "✅ Applied network patch for Docker"
+
 # Build web frontend (vite outputs to ../../dist/web relative to src/web)
 RUN cd src/web && npm run build
 
