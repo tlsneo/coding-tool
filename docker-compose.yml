@@ -19,8 +19,11 @@ services:
       # Gemini Proxy
       - "10090:10090"
     volumes:
-      # Mount Claude data directory for persistence
-      - ~/.claude:/data/.claude
+      # 方式1: 管理本机 Claude Code 会话（读取 ~/.claude 数据）
+      # - ~/.claude:/data/.claude
+
+      # 方式2: 独立运行，数据存在当前目录的 data 文件夹
+      - ./data:/data/.claude
     environment:
       - NODE_ENV=production
       - HOME=/data

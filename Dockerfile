@@ -32,7 +32,7 @@ RUN cd src/web && npm install
 COPY . .
 
 # Build web frontend
-RUN cd src/web && pnpm run build && \
+RUN cd src/web && npm run build && \
     mkdir -p /app/dist/web && \
     cp -r dist/* /app/dist/web/
 
