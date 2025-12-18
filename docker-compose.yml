@@ -3,7 +3,7 @@ version: '3.8'
 services:
   coding-tool:
     # 使用官方镜像（推荐）
-    image: ghcr.io/cooperjiang/cc-tool:latest
+    image: ghcr.io/cooperjiang/coding-tool:latest
     # 或本地构建: 注释上面的 image，取消下面的注释
     # build: .
     container_name: coding-tool
